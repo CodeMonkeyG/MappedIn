@@ -1,3 +1,5 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { BlueDot } from '@mappedin/blue-dot';
 import { getMapData, show3dMap, DOORS } from '@mappedin/mappedin-js';
 import type { Directions, Label, Space } from '@mappedin/mappedin-js';
