@@ -145,8 +145,7 @@ body,
   animation: rise-in 180ms ease-out both;
 }
 
-.mobile-nav-backdrop,
-.modal-backdrop {
+.mobile-nav-backdrop {
   animation: fade-in 150ms ease-out both;
 }
 
@@ -174,7 +173,6 @@ body,
   .location-toast > .card,
   .modal .modal-dialog,
   .mobile-nav-backdrop,
-  .modal-backdrop,
   .mobile-navigation-drawer,
   .mobile-nav-backdrop--closing,
   .mobile-navigation-drawer--closing {
