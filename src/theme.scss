@@ -1,0 +1,20 @@
+$greenfield-forest: #123c2d;
+$greenfield-leaf: #3f9b68;
+$greenfield-mint: #dff3e6;
+$greenfield-ink: #183027;
+$greenfield-border: #c8ddd0;
+$greenfield-surface: #f6faf7;
+
+$primary: $greenfield-forest;
+$secondary: $greenfield-leaf;
+$success: $greenfield-leaf;
+$info: $greenfield-mint;
+$warning: $greenfield-leaf;
+$danger: $greenfield-forest;
+$light: $greenfield-surface;
+$dark: $greenfield-ink;
+$body-color: $greenfield-ink;
+$body-bg: $greenfield-surface;
+$border-color: $greenfield-border;
+
+@import "bootstrap/scss/bootstrap";
