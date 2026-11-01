@@ -1,9 +1,11 @@
 export interface Sale {
   id: string;
   propertyId: string;
+  spaceId: string;
   title: string;
+  offer: string;
   description: string;
-  storeName?: string;
+  storeName: string;
   validFrom: string;
   validUntil: string;
 }

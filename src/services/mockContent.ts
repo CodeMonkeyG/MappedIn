@@ -1,14 +1,33 @@
 import type { MallContentService } from './content';
+import { mainLevelStorefronts } from './storefronts';
 
 const delay = () => new Promise<void>((resolve) => window.setTimeout(resolve, 180));
+const offers = [
+  { title: 'Seasonal savings', offer: '15% off one regular-priced item' },
+  { title: 'Mall visit special', offer: 'Buy one, get one 50% off' },
+  { title: 'Featured offer', offer: '20% off your purchase' },
+  { title: 'Shopper bonus', offer: 'Buy two, get one free' },
+] as const;
+
+const promotions = (propertyId: string) => mainLevelStorefronts.map((store, index) => {
+  const offer = offers[index % offers.length];
+  return {
+    id: `promotion-${store.id}`,
+    propertyId,
+    spaceId: store.id,
+    storeName: store.name,
+    title: offer.title,
+    offer: offer.offer,
+    description: `Present this demo offer at ${store.name}. Terms and exclusions may apply.`,
+    validFrom: '2026-11-01',
+    validUntil: '2026-11-30',
+  };
+});
 
 export const mockContentService: MallContentService = {
   async listSales(propertyId) {
     await delay();
-    return [
-      { id: 'sale-apple', propertyId, title: 'Weekend accessories event', description: 'Sample offer for presentation only.', storeName: 'Apple', validFrom: '2026-11-01', validUntil: '2026-11-30' },
-      { id: 'sale-nike', propertyId, title: 'Member style event', description: 'Sample seasonal promotion.', storeName: 'Nike Factory Store', validFrom: '2026-11-01', validUntil: '2026-11-30' },
-    ];
+    return promotions(propertyId);
   },
   async listFoodVendors(propertyId) {
     await delay();
