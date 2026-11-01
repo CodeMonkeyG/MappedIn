@@ -25,6 +25,21 @@ yarn build
 
 Credentials remain local-only; do not commit `.env.local`.
 
+## Container deployment
+
+The Compose stack builds the Vite application and serves its static output from an unprivileged Nginx container. It intentionally does not configure TLS or a reverse proxy because the shared Nginx host handles those concerns.
+
+Provide the public Mappedin build variables in the deployment environment, then build and start the service:
+
+```sh
+export VITE_MAPPEDIN_KEY=...
+export VITE_MAPPEDIN_SECRET=...
+export VITE_MAPPEDIN_MAP_ID=mappedin-demo-mall
+docker compose up --build -d
+```
+
+The service listens on `${MAPPEDIN_PORT:-8088}` on the Docker host. Configure the external Nginx host to reverse-proxy the desired hostname/path to `http://<docker-host>:8088`. `VITE_*` values are compiled into the browser bundle and therefore must use the approved public Mappedin access model.
+
 ## Demo behavior
 
 - The React/Vite frontend loads the Mappedin demo venue directly with the Mappedin JS SDK. It has no application backend.

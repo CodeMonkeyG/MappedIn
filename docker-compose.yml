@@ -1,0 +1,25 @@
+services:
+  mappedin-web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        VITE_MAPPEDIN_KEY: ${VITE_MAPPEDIN_KEY:?Set VITE_MAPPEDIN_KEY in the deployment environment}
+        VITE_MAPPEDIN_SECRET: ${VITE_MAPPEDIN_SECRET:?Set VITE_MAPPEDIN_SECRET in the deployment environment}
+        VITE_MAPPEDIN_MAP_ID: ${VITE_MAPPEDIN_MAP_ID:-mappedin-demo-mall}
+    container_name: mappedin-web
+    restart: unless-stopped
+    ports:
+      - "${MAPPEDIN_PORT:-8088}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - mappedin-network
+
+networks:
+  mappedin-network:
+    driver: bridge
