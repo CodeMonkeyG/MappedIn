@@ -10,7 +10,7 @@ services:
     container_name: mappedin-web
     restart: unless-stopped
     ports:
-      - "${MAPPEDIN_PORT:-8088}:8080"
+      - "127.0.0.1:${MAPPEDIN_PORT:-8088}:8080"
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ || exit 1"]
       interval: 30s
@@ -19,7 +19,11 @@ services:
       start_period: 10s
     networks:
       - mappedin-network
+      - codemonkeyg
 
 networks:
   mappedin-network:
     driver: bridge
+  codemonkeyg:
+    external: true
+    name: codemonkeyg_default
