@@ -2,9 +2,15 @@
 
 ## 1. Document purpose and status
 
-This specification defines the client-demo application and the frontend foundation for a later production backend. It records both the intended scope and the delivered demo behavior; browser and on-site validation remain separate from implementation.
+This specification defines the first production slice of the client application and the frontend
+foundation for later services. It records both the intended scope and the delivered behavior;
+browser and on-site commissioning remain separate from implementation.
 
 The immediate deliverable is a functioning, customer-facing React application using a real Mappedin map and SDK routing, with local canned responses for mall business content. No application backend is required for this phase.
+
+The application is now deployed as a containerized frontend. Manual sunny-day smoke testing is
+recorded in `QA.md`; route coverage, formal accessibility/device validation, and physical-site
+commissioning remain separate launch activities.
 
 ### Confirmed decisions
 
@@ -15,11 +21,13 @@ The immediate deliverable is a functioning, customer-facing React application us
 - Include simple demo pages for Sales, Food Court Menus, and Events, in addition to wayfinding.
 - Do not build a backend unless a demonstrated requirement makes it unavoidable. Any separately approved backend must use Python and FastAPI.
 
-### Working assumptions requiring client validation
+### Working assumptions requiring commissioning
 
 - The demo covers one property and its main level, not all three properties.
 - The simulated initial origin is Parking Lot B on the configured main level. It is a demo location, not a browser-measured visitor position or a claim of garage-level routing.
-- The existing map is a demonstration venue until the customer supplies and approves their own map, floor, entrance, and storefront data.
+- The configured Mappedin map is Greenfield's blueprint-based production map. Its modeled
+  floor, entrance, storefront, signage, and pedestrian-route data require physical commissioning
+  before public launch.
 - Preserve the existing Greenfield green branding as the starting visual direction. This is not a new branding engagement.
 - English and metric distances are the initial presentation defaults, consistent with the existing prototype. Additional languages and alternate distance units are not required for demo acceptance.
 
@@ -253,10 +261,12 @@ Use a narrow adapter/hook inside `features/wayfinding/` to encapsulate SDK lifec
 ### 7.5 Network and credential policy
 
 - Allow the SDK's required map-data, asset, authentication, and any documented SDK-managed network traffic. Record observed SDK traffic during QA; do not claim zero external requests.
-- No mall business-content request may leave the browser in demo mode.
-- Use official permitted demo credentials only for demo maps, subject to Mappedin's terms. Do not reproduce credential values in documentation or logs.
+- No mall business-content request may leave the browser while fixture content is in use.
+- Use only approved credentials for the configured production map, subject to Mappedin's terms.
+  Do not reproduce credential values in documentation or logs.
 - Configuration/environment variables improve configurability but do not make browser-bundled values secret. In particular, `VITE_*` values are public in the compiled frontend.
-- Do not ship privileged customer credentials in the frontend. Before using customer maps, confirm licensing and an approved authentication approach.
+- Do not ship privileged credentials in the frontend. Confirm licensing and an approved
+  authentication approach before public deployment.
 - If customer-map access requires protecting credentials and there is no approved token provider, raise that as a blocker. A minimal FastAPI token broker is a separately approved exception, not a reason to build a general backend now.
 
 ## 8. Usability, accessibility, and reliability
@@ -294,7 +304,9 @@ Demo success does not establish production readiness, live indoor positioning, o
 
 ## 10. Implementation sequence and deliverables
 
-1. **Validate map inputs:** Confirm the demo venue, main-floor ID, entrance target, and storefront catalog. Identify any missing connectivity before polishing the UI.
+1. **Validate map inputs:** Confirm the blueprint-based production map, main-floor ID, modeled
+   entrance target, and storefront catalog. Identify any missing connectivity before polishing the
+   UI.
 2. **Deepen Bootstrap:** Replace all currently explicitly defined css rules with twitter bootstrap classes where applicable. Whenever possible, avoid defining custom css and prefer Bootstrap.
 3. **Introduce React:** Add compatible React/SDK dependencies and TSX/Vite configuration; move the existing branded shell into components. Preserve the existing prototype's useful behavior and comments.
 4. **Define local content services:** Add domain types, deterministic fixtures, service composition, QueryClient, and query hooks.
@@ -319,7 +331,7 @@ No application code is authorized by the creation of this specification alone.
 All boxes below start unchecked. Check them only after actual execution and attach results or notes in `QA.md`.
 
 - [ ] Install with Yarn and start the documented frontend command.
-- [ ] Load the actual demo map and verify the configured main level and entrance.
+- [ ] Load the configured production map and verify the modeled main level and entrance.
 - [ ] Validate every routable catalog entry and check entrance-to-store route coverage.
 - [ ] Browse/search/select stores, including case and whitespace variations and no matches.
 - [ ] Compare text instructions with representative short, long, and multi-turn paths.
@@ -345,10 +357,13 @@ All boxes below start unchecked. Check them only after actual execution and atta
 
 These items do not block writing the spec, but some must be resolved before a client-specific demo or production rollout:
 
-- **Venue data:** Does the client have a published, licensed map with accurate main-level pedestrian connectivity and storefront associations? Until supplied, use an explicitly labeled demonstration venue.
-- **Entrance:** Which parking entrance is the agreed start? Confirm its precise indoor navigation target; do not substitute an arbitrary named space.
+- **Venue data:** The blueprint-based production map must be commissioned against the physical
+  property to confirm main-level pedestrian connectivity and storefront associations.
+- **Entrance:** Confirm that the modeled Parking Lot B origin represents the agreed physical
+  parking/entrance target; do not substitute an arbitrary named space.
 - **Store coverage:** Is the map data complete enough to route to every intended storefront? Missing mappings or connectivity must be fixed or disclosed, not hidden by reducing the directory without agreement.
-- **Authentication:** Are public demo credentials sufficient for the selected demonstration venue? Customer credentials require a separate security/licensing decision.
+- **Authentication:** Confirm the approved public/token authentication model for the production
+  map. Browser-bundled configuration cannot contain privileged credentials.
 - **Positioning:** Does the client expect real-time indoor location? This is a separate integration and is not provided by the simulated blue dot.
 - **Instructions:** Can the current venue geometry and instruction data provide directions a first-time visitor can follow? Field validation remains necessary for production.
 - **Content:** Obtain approved branding, tenant names, menus, offers, event information, and permission to show them before replacing sample content.
@@ -364,9 +379,9 @@ Official documentation reviewed in a real browser while preparing this specifica
 
 Repository evidence: `AGENTS.md`, `package.json`, `src/main.ts`, `index.html`, `tsconfig.json`, and `public/sw.js` in the current working tree.
 
-Direct documentation extraction was unavailable and plain HTTP retrieval returned 403; the pages were successfully read through the browser. No application build, runtime route coverage, positioning test, or client-map validation was performed as part of this documentation-only task. Package compatibility and exact SDK method signatures must be checked during implementation against the installed versions.
+Direct documentation extraction was unavailable and plain HTTP retrieval returned 403; the pages were successfully read through the browser. This initial documentation task did not include an application build, runtime route coverage, positioning test, or client-map validation. Subsequent implementation, build validation, and manual sunny-day smoke testing are recorded in `QA.md`. Package compatibility and exact SDK method signatures must be checked during implementation against the installed versions.
 
-## 14. Delivered demo behavior
+## 14. Delivered application behavior
 
 The following implementation is present in the current frontend and supersedes planning-only statements above where they conflict:
 
@@ -378,4 +393,6 @@ The following implementation is present in the current frontend and supersedes p
 - Simulated arrival keeps the blue dot and current-coordinate origin available for continued wayfinding. Store arrivals show fixture-backed promotions; amenity arrivals do not present a store promotion modal.
 - Deterministic promotions exist for the verified storefront catalog and appear on the Promotions page, as nearby simulated-walk markers, and at eligible store arrival. The Promotions page supports free-text search across promotion fields.
 - The supplemental pages use fixed, centered cover-image presentation layers with elevated Bootstrap cards. Mobile navigation uses a Bootstrap offcanvas-style drawer with keyboard dismissal, a transparent click-capture backdrop, and reduced-motion-aware transitions.
-- `yarn build` has passed repeatedly. Runtime/browser checks and route coverage remain recorded as outstanding in `QA.md`.
+- `yarn build` has passed repeatedly. Manual browser smoke checks are recorded in `QA.md`; route
+  coverage, failure-path validation, formal accessibility/device coverage, and physical-site
+  commissioning remain outstanding.
